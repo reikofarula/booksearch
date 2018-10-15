@@ -20,8 +20,6 @@ namespace WebApplication2.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:1786/api/");
-                //client.BaseAddress = new Uri("http://localhost:20789/api");
-
                 
                 var responseTask = client.GetAsync("booksearch");
                 responseTask.Wait();
