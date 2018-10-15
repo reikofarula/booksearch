@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication2", "WebApplication2\WebApplication2.csproj", "{087A128D-3D49-46C3-A765-ADBC9C49C07F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookSearch", "WebApplication2\BookSearch.csproj", "{087A128D-3D49-46C3-A765-ADBC9C49C07F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56D79486-E069-4328-8B68-212F7D400F66}"
+	ProjectSection(SolutionItems) = preProject
+		books.xml = books.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
