@@ -19,7 +19,8 @@
             Price:@Html.DropDownList("bookPrice", "All")
             <br/>
             <input type="submit" value="Filter"/>
-
+            <br/>
+        @*<input type ="button" value="Remove filter" oncliek ="location.href='@Url.Action("Index", "Book")'" />*@
         </p> 
     } 
 </p>
@@ -49,7 +50,14 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Author)
+        @{ if (item.Author == null)
+        {
+           item.Author = "";
+        }
+        @Html.DisplayFor(modelItem => item.Author)
+        }
+                
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Title)
