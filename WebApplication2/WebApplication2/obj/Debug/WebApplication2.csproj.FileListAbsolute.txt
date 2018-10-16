@@ -152,3 +152,4 @@ C:\booksearch\WebApplication2\WebApplication2\bin\System.Web.Http.Owin.xml
 C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.dll
 C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.pdb
 C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.csprojResolveAssemblyReference.cache
+C:\booksearch\WebApplication2\WebApplication2\bin\LazyCache.dll

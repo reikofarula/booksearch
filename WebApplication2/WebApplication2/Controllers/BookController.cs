@@ -38,6 +38,7 @@ namespace WebApplication2.Controllers
                         //if books are db objects, Contains runs on the database, not C#. on DB, Contains maps to SQL LIKE, which is case insensitive
                         //https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/adding-search
 
+                        //TODO When you serach with "Midnight Rain", there will be no much, because there is nothing that matches with two words. How to solve this?
                         var idTitlestrings = new Dictionary<string, string[]>();
                         books.ForEach(b => idTitlestrings.Add(b.Id, b.Title.ToLower().Split(' ')));
                         var matchedTitles = new List<string>();

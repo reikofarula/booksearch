@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Xml.Linq;
 using WebApplication2.Models;
+using LazyCache;
 
 namespace WebApplication2.Controllers
 {
@@ -12,35 +13,18 @@ namespace WebApplication2.Controllers
     public class BookSearchController : ApiController
     {
         private List<BookViewModel> books = new List<BookViewModel>();
-        //private string xmlAllText;
-        //private List<BookViewModel> bookViewModels;
+        private IEnumerable<XElement> booksXElements;
+
+        IAppCache cache = new CachingService();
 
         public IHttpActionResult Get()
         {
             ExtractXmlData();
 
-            //PopulateViewModels();
-
-
             if (books.Count == 0)
                 return NotFound();
             return Ok(books);
         }
-
-        //private void PopulateViewModels()
-        //{
-        //    bookViewModels = books.Select(b =>
-        //        new BookViewModel
-        //        {
-        //            Author = b.Author,
-        //            Description = b.Description,
-        //            Genre = b.Genre,
-        //            Id = b.Id,
-        //            Price = b.Price,
-        //            PublishDate = b.PublishDate,
-        //            Title = b.Title
-        //        }).ToList<BookViewModel>();
-        //}
 
         //[Route("{title}")]
         //public IHttpActionResult Get(string text)
@@ -61,17 +45,9 @@ namespace WebApplication2.Controllers
         //}
         private void ExtractXmlData()
         {
-            //xmlAllText = File.ReadAllText(@"C:\Users\rewat\Downloads\Exercise-BookSearch\books.xml");
+            booksXElements = cache.GetOrAdd("latest_xml", () => BooksXElements());
 
-            //var x = XDocument.Load(@"C:\Users\rewat\Downloads\Exercise-BookSearch\books.xml");
-            //var catalog_books = x.Element("catalog").Elements().Descendants("book").Select(b => b);
-
-            var bs = XDocument.Load(@"C:\Users\rewat\Downloads\Exercise-BookSearch\books.xml")
-                .Element("catalog")
-                .Elements("book")
-                .Select(b => b);
-
-            foreach (var xElement in bs)
+            foreach (var xElement in booksXElements)
             {
                 var book = new BookViewModel()
                 {
@@ -87,6 +63,15 @@ namespace WebApplication2.Controllers
             }
         }
 
+        private IEnumerable<XElement> BooksXElements()
+        {
+            var booksXElements = XDocument.Load(@"C:\Users\rewat\Downloads\Exercise-BookSearch\books.xml")
+                .Element("catalog")
+                .Elements("book")
+                .Select(b => b);
+            return booksXElements;
+        }
+
         private decimal ConvertPrice(string priceStr)
         {
             decimal decimalPrice;
@@ -97,15 +82,5 @@ namespace WebApplication2.Controllers
         }
     }
 
-    //public class Book
-    //{
-    //    public string Id { get; set; }
-    //    public string Author { get; set; }
-    //    public string Title { get; set; }
-    //    public string Genre { get; set; }
-
-    //    public string Price { get; set; }
-    //    public string PublishDate { get; set; }
-    //    public string Description { get; set; }
-    //}
+   
 }
