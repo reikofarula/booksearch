@@ -48,7 +48,7 @@ namespace WebApplication2.Controllers
 
         private IEnumerable<XElement> BooksXElements()
         {
-            var booksXElements = XDocument.Parse(BooksResource.books).Element("catalog").Elements("book").Select(b => b);
+            var booksXElements = XDocument.Parse(BooksResource.books).Element("catalog")?.Elements("book").Select(b => b);
 
             return booksXElements;
         }
