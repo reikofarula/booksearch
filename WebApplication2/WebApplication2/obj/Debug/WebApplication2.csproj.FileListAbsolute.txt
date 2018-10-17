@@ -153,3 +153,5 @@ C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.dll
 C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.pdb
 C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.csprojResolveAssemblyReference.cache
 C:\booksearch\WebApplication2\WebApplication2\bin\LazyCache.dll
+C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.BooksResource.resources
+C:\booksearch\WebApplication2\WebApplication2\obj\Debug\WebApplication2.csproj.GenerateResource.Cache
