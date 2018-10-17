@@ -11,6 +11,8 @@ namespace WebApplication2.Controllers
 
     public class BookController : Controller
     {
+        private static readonly List<string> toIgnore = new List<string> { ",", ".", "/", "\\", "-", "=" };
+        private static readonly char[] charsToTrim = new char[] { ',', '.', '/', '\\', '-', '=' };
         // GET: Book
         public ActionResult Index(string bookGenre, string searchString, string author, string bookPrice) // string description, string publishdate
         {
@@ -35,48 +37,40 @@ namespace WebApplication2.Controllers
 
                      if (!string.IsNullOrEmpty(searchString))
                     {
-                        //if books are db objects, Contains runs on the database, not C#. on DB, Contains maps to SQL LIKE, which is case insensitive
-                        //https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/adding-search
+                        var searchStringsTrimmed = TrimSearchKeyword(searchString);
 
-                        //Split every book's title into string array
-                        var idTitlestrings = new Dictionary<string, string[]>();
-                        books.ForEach(b => idTitlestrings.Add(b.Id, b.Title.ToLower().Split(' ')));
-
-                        //Split searchstring into string array
-                        var searchStringArray = searchString.ToLower().Split(' ');
-
-                        var matchedTitles = new List<string>();
-                        foreach (var bookTitle in idTitlestrings)
-                        {
-                            var matchCount = 0;
-                            var numberOfStrings = searchStringArray.Length;
-                            for (var index = 0; index < numberOfStrings; index++)
-                            {
-                                if (bookTitle.Value.Any(word => word.Contains(searchStringArray[index])))
-                                    matchCount++;
-                                if(matchCount == numberOfStrings)
-                                    matchedTitles.Add(bookTitle.Key);
-                            }
-                           
-                        }
-
-                        books = books.Where(b => matchedTitles.Contains(b.Id)).ToList();
-
+                        var idTitlestringDictionary = new Dictionary<string, string[]>();
+                        books.ForEach(b => idTitlestringDictionary.Add(b.Id, b.Title.ToLower().Split(' ')));
+                       
+                        books = GetMatchedItems(idTitlestringDictionary, searchStringsTrimmed.ToArray(), books);
                     }
+
+                    if (!string.IsNullOrEmpty(author))
+                    {
+                        var authorStringsTrimmed = TrimSearchKeyword(author);
+                       
+                        var idAuthorDictionary = new Dictionary<string, string[]>();
+                        foreach (var b in books)
+                        {
+                            char[] toTrim = { ',' };
+                            var nameSplit = b.Author.ToLower().Split(' ');
+                            var nameArray = new List<string>();
+                            nameSplit.ForEach(n => { nameArray.Add(n.TrimEnd(toTrim));});
+                             
+                            idAuthorDictionary.Add(b.Id, nameArray.ToArray());
+                        }
+                        books = GetMatchedItems(idAuthorDictionary, authorStringsTrimmed.ToArray(), books);
+                    }
+
                     if (!string.IsNullOrEmpty(bookGenre))
                     {
                         books = books.Where(b => b.Genre.Equals(bookGenre)).ToList();
                     }
 
-                    if (!string.IsNullOrEmpty(author))
-                    {
-                        books = books.Where(b => b.Author.Equals(author)).ToList();
-                    }
-
                     if (!string.IsNullOrEmpty(bookPrice))
                     {
                         var words = bookPrice.Split(' ');
-                        char[] toTrim = {'$'};
+                        char[] toTrim = {'€'};
                         var fromPrice = Convert.ToDecimal(words[0].Trim(toTrim));
                         var toPrice = words.Length == 2 ? -99m :  Convert.ToDecimal(words[2].Trim(toTrim));
                         books = toPrice < 0 ? books.Where(b => b.Price > fromPrice).ToList() : books.Where(b => b.Price > fromPrice && b.Price < toPrice).ToList();
@@ -89,6 +83,35 @@ namespace WebApplication2.Controllers
                 }
             }
             return View(books);
+        }
+
+        private HashSet<string> TrimSearchKeyword(string searchString)
+        {
+            var serachStrings = searchString.ToLower().Split(' ').ToList();
+            serachStrings.RemoveAll(s => toIgnore.Contains(s));
+
+            var searchStringsTrimmed = new HashSet<string>();
+            serachStrings.ForEach(ss => searchStringsTrimmed.Add(ss.TrimEnd(charsToTrim)));
+            return searchStringsTrimmed;
+        }
+
+        private static List<BookViewModel> GetMatchedItems(Dictionary<string, string[]> idBookstringDictionary,
+            string[] searchStringArray, IList<BookViewModel> books)
+        {
+            var matchedTitles = new List<string>();
+            foreach (var book in idBookstringDictionary)
+            {
+                var matchCount = 0;
+                var numberOfStrings = searchStringArray.Length;
+                for (var index = 0; index < numberOfStrings; index++)
+                {
+                    if (book.Value.Any(word => word.Contains(searchStringArray[index])))
+                        matchCount++;
+                    if (matchCount == numberOfStrings)
+                        matchedTitles.Add(book.Key);
+                }
+            }
+            return books.Where(b => matchedTitles.Contains(b.Id)).ToList();
         }
 
         private void CreateDropdownData(IEnumerable<BookViewModel> books)
@@ -110,8 +133,8 @@ namespace WebApplication2.Controllers
             foreach (var range in priceRangeDictionary)
             {
                 priceCategories.Add(string.IsNullOrEmpty(range.Value)
-                    ? $"${range.Key} - "
-                    : $"${range.Key} - ${range.Value}");
+                    ? $"€{range.Key} - "
+                    : $"€{range.Key} - €{range.Value}");
             }
             ViewBag.bookPrice = new SelectList(priceCategories);
 
