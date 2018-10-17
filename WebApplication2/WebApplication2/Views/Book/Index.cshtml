@@ -7,7 +7,6 @@
 <h2>My book list</h2>
 
 <p>
-    @*@Html.ActionLink("Create New", "Create")*@
     
     @using (Html.BeginForm()){    
         <p>
@@ -20,7 +19,6 @@
             <br/>
             <input type="submit" value="Filter"/>
             <br/>
-        @*<input type ="button" value="Remove filter" oncliek ="location.href='@Url.Action("Index", "Book")'" />*@
         </p> 
     } 
 </p>
@@ -74,11 +72,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
+       
     </tr>
 }
 

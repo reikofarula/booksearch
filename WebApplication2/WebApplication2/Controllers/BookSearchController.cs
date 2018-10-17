@@ -26,23 +26,6 @@ namespace WebApplication2.Controllers
             return Ok(books);
         }
 
-        //[Route("{title}")]
-        //public IHttpActionResult Get(string text)
-        //{
-        //    if(bookViewModels.Count == 0)
-        //        PopulateViewModels();
-
-        //    //just an example
-        //    var titleExists = bookViewModels.Any(b => b.Title.Equals(text));
-
-        //    if (!titleExists) return NotFound();
-        //    {
-        //        //var books = bookViewModels.Where(b => b.Title.Equals(text));
-
-        //        return Ok(bookViewModels.Where(b => b.Title.Equals(text)));
-        //    }
-
-        //}
         private void ExtractXmlData()
         {
             booksXElements = cache.GetOrAdd("latest_xml", () => BooksXElements());
@@ -75,7 +58,7 @@ namespace WebApplication2.Controllers
         private decimal ConvertPrice(string priceStr)
         {
             decimal decimalPrice;
-            priceStr = priceStr.Replace(".", ","); //TODO is there any other way to convert to decimal with ',' ???
+            priceStr = priceStr.Replace(".", ","); 
             if(decimal.TryParse(priceStr, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("sv-SE"),out decimalPrice))
                 return decimalPrice;
             return 0m;
