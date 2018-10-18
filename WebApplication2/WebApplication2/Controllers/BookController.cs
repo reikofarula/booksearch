@@ -11,10 +11,10 @@ namespace WebApplication2.Controllers
 
     public class BookController : Controller
     {
-        private static readonly List<string> toIgnore = new List<string> { ",", ".", "/", "\\", "-", "=" };
-        private static readonly char[] charsToTrim = new char[] { ',', '.', '/', '\\', '-', '=' };
+        private static readonly List<string> toIgnore = new List<string> { ",", ".", "/", "\\", "-", "=", "@", "&", "%" };
+        private static readonly char[] charsToTrim = new char[] { ',', '.', '/', '\\', '-', '=', '@', '&', '%' };
         // GET: Book
-        public ActionResult Index(string bookGenre, string searchString, string author, string bookPrice) // string description, string publishdate
+        public ActionResult Index(string bookGenre, string searchString, string author, string bookPrice)
         {
             IList<BookViewModel> books = null;
 
@@ -24,8 +24,8 @@ namespace WebApplication2.Controllers
                 
                 var responseTask = client.GetAsync("booksearch");
                 responseTask.Wait();
-
                 var result = responseTask.Result;
+
                 if (result.IsSuccessStatusCode)
                 {
                     var readTask = result.Content.ReadAsAsync<IList<BookViewModel>>();
@@ -52,6 +52,7 @@ namespace WebApplication2.Controllers
                         var idAuthorDictionary = new Dictionary<string, string[]>();
                         foreach (var b in books)
                         {
+                            //Trim "," from the author's names 
                             char[] toTrim = { ',' };
                             var nameSplit = b.Author.ToLower().Split(' ');
                             var nameArray = new List<string>();
@@ -91,7 +92,13 @@ namespace WebApplication2.Controllers
             serachStrings.RemoveAll(s => toIgnore.Contains(s));
 
             var searchStringsTrimmed = new HashSet<string>();
-            serachStrings.ForEach(ss => searchStringsTrimmed.Add(ss.TrimEnd(charsToTrim)));
+            foreach (var ss in serachStrings)
+            {
+                var endtrimmed = ss.TrimEnd(charsToTrim);
+                var starttrimmed = endtrimmed.TrimStart(charsToTrim);
+                searchStringsTrimmed.Add(starttrimmed);
+            }
+
             return searchStringsTrimmed;
         }
 
