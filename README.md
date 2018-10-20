@@ -9,5 +9,5 @@ Instruction for running the application:
 	a. Cretain symbols in serach strings will be ignored. (",", ".", "/", "\\", "-", "=", "@", "&", "%")  e.g. If you search for author name "joe , kutner", you will get match for author name that contains "joe" and "kutner", and "," will not be considered necessary to match the serach string. 
 	b. If you repeat the same word multiple times in your serach string, it is conted once. E.g. if you serach for title with "the the", the book(s) returned should not have contain two "the" in the tile, it is enough that title contains one "the". 
 	c. Serach result should return items that contain the search string. E.g. if you serach for title word "Ruby", even a book that contains the word "JRuby" should be returned.
-	d. If you write multiple search words separated by white space, only the items that contain all those serach words should be returned.
+	d. If you write multiple search words separated by white space, only the items that contain all those serach words should be returned. 
 4. There is no button to remove all filters. if you want to show all the books again after your serach, you need to remove all the filters yourself and klick "Filter" button.
