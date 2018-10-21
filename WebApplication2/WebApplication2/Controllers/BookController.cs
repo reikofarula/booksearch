@@ -52,7 +52,7 @@ namespace WebApplication2.Controllers
                         var idAuthorDictionary = new Dictionary<string, string[]>();
                         foreach (var b in books)
                         {
-                            //Trim "," from the author's names 
+                            //Trim "," from the author's names and save them in idAuthorDictionary
                             char[] toTrim = { ',' };
                             var nameSplit = b.Author.ToLower().Split(' ');
                             var nameArray = new List<string>();
